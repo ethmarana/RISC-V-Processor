@@ -6,7 +6,7 @@ module ALU_tb;
     logic [31:0] result;
     logic zero;
 
-ALU instance1 (
+ALU instance1 #(.dataw(32)) (
     .a(a),
     .b(b),
     .control(control),
@@ -38,47 +38,91 @@ initial begin
     end
 
     // test case add 
-    a = 32'h10;
-    b = 32'h20;
+    a = 32'd16;
+    b = 32'd32;
     control = 4'b0010;
     #33;
-    if (result == 32'h30 && zero == 1'b0) begin
+    if (result == 32'd48 && zero == 1'b0) begin
         $display("ADD passed");
     end else begin
         $display("ADD failed");
     end
 
+    // test case bitwise XOR
+    a = 32'b00000000000000000000000000001111;
+    b = 32'b00000000000000000000000000000101;
+    control = 4'b0011;
+    #33;
+    if (result == 32'b00000000000000000000000000001010 && zero == 1'b0) begin
+        $display("XOR passed");
+    end else begin
+        $display("XOR failed");
+    end
+
+    // test case shift left logical
+    a = 32'd1;
+    b = 32'd4;
+    control = 4'b0100;
+    #33;
+    if (result == 32'd16 && zero == 1'b0) begin
+        $display("SLL passed");
+    end else begin
+        $display("SLL failed");
+    end
+
+    // test case shift right logical
+    a = 32'd32;
+    b = 32'd2;
+    control = 4'b0101;
+    #33;
+    if (result == 32'd8 && zero == 1'b0) begin
+        $display("SRL passed");
+    end else begin
+        $display("SRL failed");
+    end
+
     // test case subtract
-    a = 32'h69;
-    b = 32'h42;
+    a = 32'd105;
+    b = 32'd66;
     control = 4'b0110;
     #33;
-    if (result == 32'h27 && zero == 1'b0) begin
+    if (result == 32'd39 && zero == 1'b0) begin
         $display("SUBTRACT passed");
     end else begin  
         $display("SUBTRACT failed");
     end
 
     // test case set less than
-    a = 32'h98;
-    b = 32'h110;
+    a = 32'd152;
+    b = 32'd272;
     control = 4'b0111;
     #33;
-    if (result ==32'h1 && zero == 1'b0) begin
+    if (result == 32'd1 && zero == 1'b0) begin
         $display("SLT passed");
     end else begin
         $display("SLT failed");
     end
 
-    // test case nor 
-    a = 32'b00000000000000000000000000000011;
-    b = 32'b00000000000000000000000000000101;
+    // test case set less than unsigned
+    a = 32'd5;
+    b = 32'd16;
     control = 4'b1000;
     #33;
-    if (result == 32'b11111111111111111111111111111000 && zero == 1'b0) begin
-        $display("NOR passed");
+    if (result == 32'd1 && zero == 1'b0) begin
+        $display("SLTU passed");
     end else begin
-        $display("NOR failed");
+        $display("SLTU failed");
+    end
+
+    // test case shift right arithmetic
+    a = 32'd4294967280;
+    b = 32'd2;
+    control = 4'b1001;
+    #33;
+    if (result == 32'd4294967292 && zero == 1'b0) begin
+        $display("SRA passed");
+    end else begin
+        $display("SRA failed");
     end
 
     // test case default 
@@ -91,8 +135,8 @@ initial begin
     end 
 
     // test case zero
-    a = 32'h5;
-    b = 32'h5;
+    a = 32'd5;
+    b = 32'd5;
     control = 4'b0110;
     #33;
     if (result == 32'b0 && zero == 1'b1) begin
