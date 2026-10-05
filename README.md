@@ -3,6 +3,3 @@ Design choice: Used a mux controlled by srcasel to choose whether ALU operand A 
 
 Tradeoff: Reusing the ALU can reduce hardware/resource usage, but adds a mux and control signal to the ALU input path. A separate adder uses more hardware, but can compute PC + immediate in parallel and may simplify/tighten timing for branch/jump logic.
 
-
-
-gotta add branch taken logic (to know if branch condiiton is true) to the datapath later in order to preserve pipelining in the future 
